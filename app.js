@@ -18,12 +18,15 @@ filterCheckbox.addEventListener("change", (e) => {
   const attendees = ul.children;
   for (let i = 0; i < attendees.length; i++) {
     let attendee = attendees[i];
+    const label = attendee.children[1];
     if (isChecked) {
+      label.style.display = "none";
       if (attendee.className !== "responded") {
         attendee.style.display = "none";
       }
     } else {
       attendee.style.display = "block";
+      label.style.display = "block";
     }
   }
 });
@@ -53,13 +56,30 @@ function createListItem(text) {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (input.value !== "") {
-    const text = input.value;
-    input.value = "";
-    const li = createListItem(text);
-    ul.appendChild(li);
+  const text = input.value;
+  input.value = "";
+  if (text !== "" && isNaN(text)) {
+    //if user submits a string
+    const liArray = document.querySelectorAll("li"); // selecting all the li and placing it into an array
+    if (liArray.length === 0) {
+      // if the array's length is 0 (starting point - will only happen at the start) then run createListItem()
+      const li = createListItem(text);
+      ul.appendChild(li);
+    } else {
+      // if the array's length is not equal to 0 (happens after the first li has been created) then run a for loop
+      for (let i = 0; i < liArray.length; i++) {
+        const span = liArray[i].firstElementChild; // selects the span element of each li in the for loop
+        if (span.textContent === text) {
+          // if the for loop finds the span's textContent to be the same as the text's value, stop the function
+          return;
+        }
+      }
+      const li = createListItem(text); // if the for loop does not find any span that is equal to the text then for loop will stop and proceed to run createListItem function
+      ul.appendChild(li);
+    }
   } else {
-    input.placeholder = "Please enter a guest's name";
+    // if user submits an empty string or integer
+    alert("Please enter a guest's name");
   }
 });
 
