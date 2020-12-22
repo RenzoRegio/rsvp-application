@@ -23,6 +23,7 @@ filterCheckbox.addEventListener("change", (e) => {
       label.style.display = "none";
       if (attendee.className !== "responded") {
         attendee.style.display = "none";
+        label.style.display = "block";
       }
     } else {
       attendee.style.display = "block";
